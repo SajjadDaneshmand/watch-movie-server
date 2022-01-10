@@ -58,7 +58,8 @@ def files():
             film_ext = ['webm', 'mkv', 'flv', 'flv', 'gif', 'wmv', 'mp4']
             if type_of_file in film_ext:
                 complete_path_file = os.path.join(path, filename)
-                return render_template('film.html', path=complete_path_file)
+                # return render_template('film.html', path=path, filename=filename)
+                pass
             return send_from_directory(path, filename)
 
     return render_template('files.html', files=listdir)
