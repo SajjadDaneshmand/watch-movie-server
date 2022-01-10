@@ -54,6 +54,11 @@ def files():
     if request.method == 'POST':
         if request.form['filenames'] in listdir:
             filename = request.form['filenames']
+            type_of_file = filename.rsplit('.')[-1]
+            film_ext = ['webm', 'mkv', 'flv', 'flv', 'gif', 'wmv', 'mp4']
+            if type_of_file in film_ext:
+                complete_path_file = os.path.join(path, filename)
+                return render_template('film.html', path=complete_path_file)
             return send_from_directory(path, filename)
 
     return render_template('files.html', files=listdir)
