@@ -1,0 +1,24 @@
+<html>
+
+<head>
+  <link href='{{ url_for("static", filename='login.css') }}' rel="stylesheet" media="screen">
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign in</title>
+</head>
+
+<body>
+  <div class="main">
+    <p class="sign" align="center">Sign in</p>
+    <form class="form1" method="post">
+      <input class="password" type="password" id="password" name="password" align="center" placeholder="Password" required>
+      {% for message in get_flashed_messages() %}
+        <div class="flash" align="center">{{ message }}</div>
+      {% endfor %}
+      <button class="submit" align="center">Sign in</button>
+
+    </div>
+
+</body>
+
+</html>

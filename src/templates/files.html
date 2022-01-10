@@ -1,0 +1,23 @@
+<html>
+
+<head>
+  <link href='{{ url_for("static", filename='files.css') }}' rel="stylesheet" media="screen">
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Files</title>
+</head>
+
+<body>
+    <div>
+        <form class="form1" enctype="multipart/form-data" method="post">
+            <select class="filenames" name="filenames">
+                {% for file in files %}
+                <div>
+                    <option value="{{ file }}">{{ file }}</option>
+                </div>
+                {% endfor %}
+            </select>
+            <button class="submit" align="center" dir="rtl">confirm</button>
+        </form>
+    </div>
+</body>
