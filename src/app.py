@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, request, session, flash, render_template, send_from_directory
+from flask import Flask, redirect, url_for, request, session, flash, render_template, send_file
 import functools
 import sys
 import os
@@ -48,18 +48,14 @@ def login():
 @app.route('/', methods=['GET', 'POST'])
 @login_required
 def files():
-    path = sys.argv[1] if len(sys.argv) > 1 else '/data/data/com.termux/files/home/storage/shared/Download/Telegram'
+    path = os.path.join('/data/data/com.termux/files/home/storage/shared', sys.argv[1])\
+        if len(sys.argv) > 1 else '/data/data/com.termux/files/home/storage/shared/Download/Telegram'
     listdir = [file for file in os.listdir(path) if os.path.isfile(os.path.join(path, file))]
 
     if request.method == 'POST':
         if request.form['filenames'] in listdir:
             filename = request.form['filenames']
-            type_of_file = filename.rsplit('.')[-1]
-            film_ext = ['webm', 'mkv', 'flv', 'flv', 'gif', 'wmv', 'mp4']
-            if type_of_file in film_ext:
-                complete_path_file = os.path.join(path, filename)
-                return render_template('film.html', path=complete_path_file)
-            return send_from_directory(path, filename)
+            return send_file(path, filename)
 
     return render_template('files.html', files=listdir)
 
