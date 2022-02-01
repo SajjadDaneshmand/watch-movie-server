@@ -55,7 +55,8 @@ def files():
     if request.method == 'POST':
         if request.form['filenames'] in listdir:
             filename = request.form['filenames']
-            return send_file(path, filename)
+            complete_path_file = os.path.join(path, filename)
+            return send_file(complete_path_file, as_attachment=True)
 
     return render_template('files.html', files=listdir)
 
