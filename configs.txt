@@ -1,0 +1,5 @@
+password=x
+SECRET_KEY=d0c90397995b2c31834b20d78394eaa0
+android_path=/data/data/com.termux/files/home/storage/shared/Download/Telegram
+linux_path=/home/sajjad/Project/watch-movie-server/src/static/Videos
+linux_html_path=/static/Videos
