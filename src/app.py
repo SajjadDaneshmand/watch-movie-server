@@ -1,20 +1,25 @@
-from flask import Flask, redirect, url_for, request, session, flash, render_template, send_file
+from flask import (
+    Flask, redirect, url_for, request, session, flash, render_template, send_file
+)
+
 import functools
-import sys
 import os
 
+# Internal
+from tools import os_detector
+from settings import Settings
 
-def create_app(test_config=None):
+
+configs = Settings()
+msg = Settings('msg')
+
+
+def create_app():
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
-        SECRET_KEY='d0c90397995b2c31834b20d78394eaa0',
+        SECRET_KEY=configs.SECRET_KEY,
     )
-    if test_config is None:
-        app.config.from_pyfile('config.py', silent=True)
-    else:
-        app.config.from_mapping(test_config)
-
     return app
 
 
@@ -35,12 +40,11 @@ def login_required(view):
 def login():
     if request.method == 'POST':
         password = request.form['password']
-        if password == '123654':
+        if password == configs.password:
             session['user_id'] = True
             return redirect(url_for('files'))
         else:
-            error = 'password isn\'t correct'
-            flash(error)
+            flash(msg.pass_error)
             return redirect(request.url)
     return render_template('login.html')
 
@@ -48,17 +52,25 @@ def login():
 @app.route('/', methods=['GET', 'POST'])
 @login_required
 def files():
-    path = os.path.join('/data/data/com.termux/files/home/storage/shared', sys.argv[1])\
-        if len(sys.argv) > 1 else '/data/data/com.termux/files/home/storage/shared/Download/Telegram'
-    listdir = [file for file in os.listdir(path) if os.path.isfile(os.path.join(path, file))]
+    if os_detector() == 'linux':
+        path = configs.linux_path
+    elif os_detector() == 'android':
+        path = configs.android_path
+    else:
+        raise Exception('os not detected!')
+
+    file_listdir = [file for file in os.listdir(path) if os.path.isfile(os.path.join(path, file))]
+    dir_listdir = [file for file in os.listdir(path) if os.path.isdir(os.path.join(path, file))]
 
     if request.method == 'POST':
-        if request.form['filenames'] in listdir:
+        if request.form['filenames'] in file_listdir:
             filename = request.form['filenames']
-            complete_path_file = os.path.join(path, filename)
-            return send_file(complete_path_file, as_attachment=True)
+            complete_path_file = os.path.join(configs.linux_html_path, filename)
+            return render_template('film.html', path=complete_path_file)
+        elif request.form['filenames'] in dir_listdir:
+            pass  # TODO: complete directory management
 
-    return render_template('files.html', files=listdir)
+    return render_template('files.html', files=file_listdir, dirs=dir_listdir)
 
 
 if __name__ == '__main__':
