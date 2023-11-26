@@ -130,3 +130,6 @@ dmypy.json
 
 # PyCharm Files
 .idea/
+
+# Video
+src/static/Videos
